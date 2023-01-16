@@ -42,13 +42,28 @@ pipeline{
      }
       }
 
-          stage('quality_gate'){
-             steps{
-               script{
-                  waitForQualityGate abortPipeline: false, credentialsId: 'sonar-config'
+          stage('uplaod the file into the nexus'){
+            steps{
 
+               script{
+                  nexusArtifactUploader artifacts:
+                      [
+                        [
+                           artifactId: 'springboot', 
+                           classifier: '', 
+                           file: 'target/Uber.jar', 
+                           type: 'jar'
+                           ]
+                     ], 
+                        credentialsId: 'nexus_id', 
+                        groupId: 'com.example', 
+                        nexusUrl: '35.89.136.196:8081', 
+                        nexusVersion: 'nexus3', 
+                        protocol: 'http', 
+                        repository: 'maven-releases', 
+                        version: '1.0.0'
                }
-             }
+            }
           }
   }
 }
